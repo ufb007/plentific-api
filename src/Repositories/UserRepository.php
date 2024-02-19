@@ -46,7 +46,7 @@ class UserRepository implements UserRepositoryInterface
      * @throws Exception description of exception
      * @return array The user data
      */
-    public function getUserById($id) {
+    public function getUserById(int $id) {
         try {
             $response = $this->client->get("users/$id");
 

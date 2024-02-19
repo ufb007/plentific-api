@@ -11,8 +11,8 @@ it('test case for UserService get users', function () {
     $userData = [
         [
             'id' => 1,
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+            'first_name' => 'Ufuk',
+            'last_name' => 'Bozdemir',
             'email' => 'ufb007@gmail.com',
             'avatar' => 'ufuk_bozdemir.jpg',
         ],
@@ -38,7 +38,7 @@ it('test case for UserService get users', function () {
     $users = $userService->all();
     
     expect($users)->toBeArray()->and(json_decode($users[0]))->toMatchArray([
-        'full_name' => 'John Doe',
+        'full_name' => 'Ufuk Bozdemir',
         'email' => 'ufb007@gmail.com',
         'avatar' => 'ufuk_bozdemir.jpg',
     ]);
@@ -89,4 +89,21 @@ it('test case for UserService create new user', function () {
     $createdUserId = $userService->create($userData);
 
     expect($createdUserId)->toBeInt()->and($createdUserId)->toEqual(3);
+    
+});
+
+it('create a user service create new user to throw an error', function () {
+    $userData = ['name' => 'Ufuk Bozdemir', 'job' => ''];
+
+    $userRepository = \Mockery::mock(UserRepository::class);
+    $userService = new UserService($userRepository);
+
+    $exception = false;
+    try {
+        $userService->create($userData);
+    } catch (\Exception $e) {
+        $exception = $e->getMessage();
+    }
+
+    expect($exception)->toBe(json_encode(['job' => ['required' => 'The Job is required']]));
 });

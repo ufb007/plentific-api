@@ -17,13 +17,17 @@ class UserService {
      */
     public function all(int $page = 1): array
     {
-        $users = $this->userRepository->getUsers($page);
+        try {
+            $users = $this->userRepository->getUsers($page);
 
-        $usersDTO = array_map(function($user) {
-            return $this->formatUserDTO($user);
-        }, $users);
+            $usersDTO = array_map(function($user) {
+                return $this->formatUserDTO($user);
+            }, $users);
 
-        return $usersDTO;
+            return $usersDTO;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
     }
 
     /**
@@ -34,9 +38,13 @@ class UserService {
      */
     public function getById(int $id)
     {
-        $user = $this->userRepository->getUserById($id);
+        try {
+            $user = $this->userRepository->getUserById($id);
 
-        return $this->formatUserDTO($user);
+            return $this->formatUserDTO($user);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
     }
 
     /**
@@ -58,8 +66,8 @@ class UserService {
 
             $validation->validate();
 
-            if ($validation->fails()) {
-                throw new \Exception($validation->errors()->firstOfAll()[0]);
+            if ($validation->fails()) {                
+                throw new \Exception(json_encode($validation->errors()->toArray()));
             }
 
             return $this->userRepository->createNewUser($data);
@@ -74,7 +82,8 @@ class UserService {
      * @param array $user 
      * @return string
      */
-    protected function formatUserDTO(array $user) {
+    protected function formatUserDTO(array $user)
+    {
         [
             'id' => $id,
             'first_name' => $firstName,

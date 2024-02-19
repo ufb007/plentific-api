@@ -8,16 +8,20 @@ $userRepository = new UserRepository();
 
 $userService = new UserService($userRepository);
 
-$users = $userService->all(2);
+$users = $userService->all(1);
 
-$user = $userService->getById(1);
+$user = $userService->getById(5);
 
 if (isset($_POST['name'])) {
-    $craetedUser = $userService->create($_POST);
+    try {
+        $craetedUser = $userService->create($_POST);
 
-    print_r($craetedUser);
+        print_r($craetedUser);
 
-    die();
+        die();
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
 }
 
 echo '<pre>';
