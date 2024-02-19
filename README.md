@@ -1,4 +1,4 @@
-#Plentific API request test
+# Plentific API request test
 
 ### Install composer package
 ```bash
@@ -27,7 +27,9 @@ $user = $userService->getById(5);
 ```
 
 ### Create new user
- - POST with request 'name' => 'Some name' and 'job' => 'Job Title'
+
+POST with request 'name' => 'Some name' and 'job' => 'Job Title'
+
 ```bash
 try {
     $createdUser = $userService->create($_POST);
