@@ -1,0 +1,32 @@
+{
+    "name": "ubozdemir/plentific",
+    "description": "Create users via a remote API",
+    "scripts": {
+        "test": "pest"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ubozdemir\\Plentific\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ufuk Bozdemir",
+            "email": "ufb007@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.8",
+        "mp091689/dump-die": "^1.0",
+        "rakit/validation": "^1.4",
+        "php-http/guzzle7-adapter": "^1.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.34"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
