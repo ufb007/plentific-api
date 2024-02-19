@@ -2,15 +2,50 @@
 
 use Ubozdemir\Plentific\Repositories\UserRepository;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Pest\TestSuite;
 
-it('fetch data from UserRpository', function() {
-    TestSuite::(GuzzleClient::class, ['get' => new Response(200, [], '{"data": "mocked data"}')]);
+it('can get user data with a mocked Guzzle client', function () {
+    $mock = new MockHandler([
+        new Response(200, [], json_encode(['data' => [['id' => 1, 'name' => 'Test User']]])),
+    ]);
 
-    $userRepository = new UserRepository(new GuzzleClient());
+    $handlerStack = HandlerStack::create($mock);
+    $client = new GuzzleClient(['handler' => $handlerStack]);
 
-    $data = $userRepository->getUsers();
+    $userRepository = new UserRepository($client);
+    $users = $userRepository->getUsers();
 
-    expect($data)->toEqual('{"data": "mocked data"}');
+    expect($users)->toBeArray()->and($users[0])->toMatchArray(['id' => 1, 'name' => 'Test User']);
+});
+
+it('can get a single user data by ID with a mocked Guzzle client', function () {
+    $mock = new MockHandler([
+        new Response(200, [], json_encode(['data' => ['id' => 2, 'name' => 'Ufuk Bozdemir']])),
+    ]);
+
+    $handlerStack = HandlerStack::create($mock);
+    $client = new GuzzleClient(['handler' => $handlerStack]);
+
+    $userRepository = new UserRepository($client);
+    $user = $userRepository->getUserById(2);
+
+    expect($user)->toBeArray()->and($user)->toMatchArray(['id' => 2, 'name' => 'Ufuk Bozdemir']);
+});
+
+it('can create a new user with a mocked Guzzle client', function () {
+    $userData = ['name' => 'New User', 'job' => 'developer'];
+
+    $mock = new MockHandler([
+        new Response(201, [], json_encode(['id' => 3])),
+    ]);
+
+    $handlerStack = HandlerStack::create($mock);
+    $client = new GuzzleClient(['handler' => $handlerStack]);
+
+    $userRepository = new UserRepository($client);
+    $createdUserId = $userRepository->createNewUser($userData);
+
+    expect($createdUserId)->toBeInt()->and($createdUserId)->toEqual(3);
 });
