@@ -2,7 +2,7 @@
     "name": "ubozdemir/plentific",
     "description": "Create users via a remote API",
     "scripts": {
-        "test": "pest"
+        "test": "pest src/"
     },
     "autoload": {
         "psr-4": {
