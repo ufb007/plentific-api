@@ -39,3 +39,8 @@ try {
     die($e->getMessage());
 }
 ```
+
+### Run tests
+```bash
+composer test
+```
